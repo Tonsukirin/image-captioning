@@ -55,7 +55,6 @@ const UploadBox: React.FC<Props> = ({
       'ngrok-skip-browser-warning': 'true',
     },
     onChange(info) {
-      // setLoading(true);
       onLoading(true);
       const { status } = info.file;
       if (status !== 'uploading') {
@@ -63,19 +62,18 @@ const UploadBox: React.FC<Props> = ({
       }
       if (status === 'done') {
         message.success(`${info.file.name} file uploaded successfully.`);
-        // setLoading(false);
+
         onLoading(false);
         setImageURL(info.file.response.image_url);
         console.log(imageURL);
       } else if (status === 'error') {
-        // setLoading(false);
         onLoading(false);
         message.error(`${info.file.name} file upload failed.`);
       }
       if (status === 'removed') {
         message.success(`${info.file.name} file is successfully removed.`);
         setImageURL('');
-        // setLoading(false);
+
         onLoading(false);
       }
     },

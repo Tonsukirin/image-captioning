@@ -31,28 +31,30 @@ const PromptInput: React.FC<InputPromptProps> = ({
     });
   };
   return (
-    <Space.Compact style={{ width: '100%' }}>
+    <>
       {contextHolder}
-      <Input
-        placeholder={placeholder}
-        value={value}
-        onChange={e => onChange(e.target.value)}
-        size={size}
-        disabled={disabled}
-        className="h-auto"
-      />
-      {HasButton ? (
-        <Button
+      <Space.Compact style={{ width: '100%' }}>
+        <Input
+          placeholder={placeholder}
+          value={value}
+          onChange={e => onChange(e.target.value)}
           size={size}
-          onClick={submit}
-          className="grid place-items-center group"
-        >
-          <CopyOutlined className="opacity-30" />
-        </Button>
-      ) : (
-        <></>
-      )}
-    </Space.Compact>
+          disabled={disabled}
+          className="h-auto"
+        />
+        {HasButton ? (
+          <Button
+            size={size}
+            onClick={submit}
+            className="grid place-items-center group"
+          >
+            <CopyOutlined className="opacity-30" />
+          </Button>
+        ) : (
+          <></>
+        )}
+      </Space.Compact>
+    </>
   );
 };
 

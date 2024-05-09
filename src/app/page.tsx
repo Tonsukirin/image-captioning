@@ -144,7 +144,11 @@ export default function Home() {
         return (
           <div>
             <p className="text-white mb-1">Generated Caption:</p>
-            <PromptInput value={checkString(selectedCaption)} size="large" />
+            <PromptInput
+              value={checkString(selectedCaption)}
+              size="large"
+              HasButton
+            />
           </div>
         );
       default:

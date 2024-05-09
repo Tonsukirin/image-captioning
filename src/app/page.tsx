@@ -30,6 +30,11 @@ export default function Home() {
     }
   };
 
+  const formReset = () => {
+    setCaptionStatus('waiting');
+    setImageURL('');
+  };
+
   const onFinish: FormProps<FieldType>['onFinish'] = async values => {
     setLoading(true);
     const formData: FormData = new FormData();
@@ -91,13 +96,7 @@ export default function Home() {
   const renderCaption = () => {
     switch (captionStatus) {
       case 'waiting':
-        return (
-          <div>
-            <p className="text-white mb-1">Social Media Caption Generator</p>
-            <PromptInput value="GENERATED CAPTION WILL BE DISPLAYED HERE" />
-          </div>
-        );
-
+        return;
       case 'selecting':
         return captions.map((caption, idx) => {
           return (
@@ -135,33 +134,34 @@ export default function Home() {
   };
 
   return (
-    <main className="flex flex-col m-20 font-thin gap-y-4 max-w-screen-2xl mx-auto">
-      <UploadBox onUploaded={setImageURL} onRemove={setImageURL} />
+    <main className="flex flex-col m-20 font-thin gap-y-2 max-w-screen-2xl mx-auto">
+      <UploadBox onUploaded={setImageURL} onRemove={() => formReset()} />
       {imageURL ? (
         <Form onFinish={onFinish}>
-          <Form.Item<FieldType> className="w-full mb-0">
-            {renderCaption()}
-          </Form.Item>
+          <div className="w-full mb-0 mt-2">{renderCaption()}</div>
           {captionStatus === 'waiting' && (
-            <div className="mt-4 flex flex-grow justify-evenly gap-x-4 ">
-              <Form.Item<FieldType> className="w-full" name="theme">
-                <PromptInput
-                  placeholder="Theme prompts here..."
-                  disabled={loading}
-                />
-              </Form.Item>
-              <Form.Item<FieldType> className="w-full" name="additionalInfo">
-                <PromptInput
-                  placeholder="Additional Information prompts here..."
-                  disabled={loading}
-                />
-              </Form.Item>
-              <Form.Item<FieldType> className="w-full" name="tone">
-                <PromptInput
-                  placeholder="Tone prompts here..."
-                  disabled={loading}
-                />
-              </Form.Item>
+            <div>
+              <p className="text-white mb-1">Optional</p>
+              <div className="flex flex-grow justify-evenly gap-x-4 ">
+                <Form.Item<FieldType> className="w-full" name="theme">
+                  <PromptInput
+                    placeholder="Theme prompts here..."
+                    disabled={loading}
+                  />
+                </Form.Item>
+                <Form.Item<FieldType> className="w-full" name="additionalInfo">
+                  <PromptInput
+                    placeholder="Additional Information prompts here..."
+                    disabled={loading}
+                  />
+                </Form.Item>
+                <Form.Item<FieldType> className="w-full" name="tone">
+                  <PromptInput
+                    placeholder="Tone prompts here..."
+                    disabled={loading}
+                  />
+                </Form.Item>
+              </div>
             </div>
           )}
           {captionStatus === 'waiting' && (
@@ -182,15 +182,28 @@ export default function Home() {
       )}
       <div>
         {captionStatus === 'selected' && (
-          <Button
-            className="bg-black"
-            type="primary"
-            loading={loading}
-            htmlType="button"
-            onClick={() => setCaptionStatus('waiting')}
-          >
-            Regenerate Caption
-          </Button>
+          <div className="flex mt-1 gap-x-4">
+            <Button
+              className="bg-black"
+              type="primary"
+              loading={loading}
+              htmlType="button"
+              onClick={() => setCaptionStatus('waiting')}
+            >
+              Regenerate Caption
+            </Button>
+            <Button
+              className="bg-black"
+              type="primary"
+              loading={loading}
+              htmlType="button"
+              onClick={() => {
+                window.location.reload();
+              }}
+            >
+              Start over
+            </Button>
+          </div>
         )}
       </div>
     </main>

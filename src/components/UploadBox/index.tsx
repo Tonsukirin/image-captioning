@@ -46,7 +46,6 @@ const UploadBox: React.FC<Props> = ({ onUploaded, onRemove }: Props) => {
       console.log(info);
       setOnPreview(true);
     },
-    //generate: '.../captions'
     headers: {
       'ngrok-skip-browser-warning': 'true',
     },
@@ -75,7 +74,7 @@ const UploadBox: React.FC<Props> = ({ onUploaded, onRemove }: Props) => {
       console.log('Dropped files', e.dataTransfer.files);
     },
     onRemove() {
-      onRemove('');
+      onRemove();
       setImageURL('');
       setImageURLHeader('');
     },

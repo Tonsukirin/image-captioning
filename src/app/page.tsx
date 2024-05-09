@@ -6,6 +6,7 @@ import { Button, Form, FormProps, Skeleton, Spin, notification } from 'antd';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import Typewriter from 'typewriter-effect';
+import GraphemeSplitter from 'grapheme-splitter';
 
 type FieldType = {
   theme?: string;
@@ -60,7 +61,7 @@ export default function Home() {
 
     try {
       const response = await fetch(
-        'https://4349-171-101-104-145.ngrok-free.app/captions/',
+        'https://53a3-171-101-104-145.ngrok-free.app/captions/',
         {
           method: 'POST',
           headers: {
@@ -129,6 +130,10 @@ export default function Home() {
                     strings: checkString(caption),
                     autoStart: true,
                     delay: 10,
+                    stringSplitter(string) {
+                      const splitter = new GraphemeSplitter();
+                      return splitter.splitGraphemes(string);
+                    },
                   }}
                 />
               </Button>
@@ -161,6 +166,7 @@ export default function Home() {
                 delay: 5,
                 loop: true,
                 cursor: ' ✈',
+                skipAddStyles: true,
               }}
             />
           }

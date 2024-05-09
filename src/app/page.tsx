@@ -59,7 +59,7 @@ export default function Home() {
 
     try {
       const response = await fetch(
-        'https://23e0-171-101-104-145.ngrok-free.app/captions/',
+        'https://4349-171-101-104-145.ngrok-free.app/captions/',
         {
           method: 'POST',
           headers: {

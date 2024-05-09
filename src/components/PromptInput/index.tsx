@@ -37,6 +37,7 @@ const PromptInput: React.FC<InputPromptProps> = ({
         onChange={e => onChange(e.target.value)}
         size={size}
         disabled={disabled}
+        className="h-auto"
       />
       {HasButton ? (
         <Button type="primary" onClick={submit} loading={valueSubmitted}>

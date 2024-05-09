@@ -20,7 +20,6 @@ const PromptInput: React.FC<InputPromptProps> = ({
   size = 'middle',
   disabled = false,
 }: InputPromptProps) => {
-  const [valueSubmitted, setValueSubmitted] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
 
   const submit = () => {

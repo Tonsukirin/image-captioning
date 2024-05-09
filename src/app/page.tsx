@@ -116,7 +116,7 @@ export default function Home() {
             <div className="mb-2" key={idx}>
               <p className="text-white mb-1">Select caption {idx + 1}:</p>
               <Button
-                className="w-full text-left"
+                className="w-full text-left whitespace-normal text-pretty break-normal break-words h-auto"
                 size="large"
                 onClick={() => {
                   setCaptionStatus('selected');
@@ -147,7 +147,7 @@ export default function Home() {
   };
 
   return (
-    <main>
+    <main className="flex flex-col items-center break-all">
       {loading && (
         <Spin
           spinning={loading}
@@ -167,7 +167,7 @@ export default function Home() {
           className="flex justify-center items-center h-full"
         />
       )}
-      <div className="flex flex-col m-20 font-thin gap-y-2 max-w-screen-2xl mx-auto">
+      <div className="flex flex-col p-4 md:mt-8 lg:m-20 font-thin min-w-[60%] mx-auto gap-y-2 w-full lg:w-auto">
         <UploadBox
           onUploaded={setImageURL}
           onRemove={() => formReset()}
@@ -179,7 +179,7 @@ export default function Home() {
             {captionStatus === 'waiting' && (
               <div>
                 <p className="text-white mb-1">Optional</p>
-                <div className="flex flex-grow justify-evenly gap-x-4 ">
+                <div className="flex flex-col md:flex-row justify-evenly gap-x-4 ">
                   <Form.Item<FieldType> className="w-full" name="theme">
                     <PromptInput
                       placeholder="Theme prompts here..."

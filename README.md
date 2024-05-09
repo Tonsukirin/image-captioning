@@ -1,4 +1,4 @@
-This is our image captioning project web application! [Image Captioning]([https://nextjs.org/](https://image-captioning-4nptk4ke9-tonsukirins-projects.vercel.app/)) 
+This is our image captioning project web application! [Image Captioning]((https://image-captioning-4nptk4ke9-tonsukirins-projects.vercel.app/)) 
 
 ## Getting Started
 

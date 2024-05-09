@@ -51,13 +51,16 @@ export default function Home() {
     }
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/captions/', {
-        method: 'POST',
-        headers: {
-          'ngrok-skip-browser-warning': 'true',
-        },
-        body: formData,
-      });
+      const response = await fetch(
+        'https://23e0-171-101-104-145.ngrok-free.app/captions/',
+        {
+          method: 'POST',
+          headers: {
+            'ngrok-skip-browser-warning': 'true',
+          },
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
         response.json().then(errorDetails => {

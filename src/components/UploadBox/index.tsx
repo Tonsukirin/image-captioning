@@ -41,7 +41,7 @@ const UploadBox: React.FC<Props> = ({ onUploaded, onRemove }: Props) => {
     accept: '.png,.jpg,.jpeg',
     multiple: false,
     maxCount: 1,
-    action: 'http://127.0.0.1:8000/file/',
+    action: 'https://23e0-171-101-104-145.ngrok-free.app/file/',
     onPreview(info) {
       console.log(info);
       setOnPreview(true);

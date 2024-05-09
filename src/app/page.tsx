@@ -167,7 +167,7 @@ export default function Home() {
           className="flex justify-center items-center h-full"
         />
       )}
-      <div className="flex flex-col p-4 md:mt-8 lg:m-20 font-thin min-w-[60%] mx-auto gap-y-2 w-full lg:w-auto">
+      <div className="flex flex-col p-4 m-20 font-thin min-w-[60%] mx-auto gap-y-2 w-full lg:w-auto">
         <UploadBox
           onUploaded={setImageURL}
           onRemove={() => formReset()}
@@ -179,7 +179,7 @@ export default function Home() {
             {captionStatus === 'waiting' && (
               <div>
                 <p className="text-white mb-1">Optional</p>
-                <div className="flex flex-col md:flex-row justify-evenly gap-x-4 ">
+                <div className="flex flex-col md:flex-row justify-evenly gap-x-4">
                   <Form.Item<FieldType> className="w-full" name="theme">
                     <PromptInput
                       placeholder="Theme prompts here..."

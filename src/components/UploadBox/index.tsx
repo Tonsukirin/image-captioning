@@ -1,33 +1,86 @@
-import React from 'react';
+import React, { use, useState } from 'react';
 import { InboxOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
-import { ConfigProvider, message, Upload } from 'antd';
+import { Alert, ConfigProvider, message, Spin, Upload } from 'antd';
+import { Image, Space } from 'antd';
+import { useEffect } from 'react';
 
 const { Dragger } = Upload;
 
-const props: UploadProps = {
-  //wait for API
-  name: 'file',
-  accept: '.png,.jpg,.jpeg',
-  multiple: false,
-  action: 'https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload',
-  onChange(info) {
-    const { status } = info.file;
-    if (status !== 'uploading') {
-      console.log(info.file, info.fileList);
-    }
-    if (status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-  onDrop(e) {
-    console.log('Dropped files', e.dataTransfer.files);
-  },
+type Props = {
+  onUploaded: any;
+  onRemove: any;
 };
 
-const UploadBox: React.FC = () => {
+const UploadBox: React.FC<Props> = ({ onUploaded, onRemove }: Props) => {
+  const [imageURL, setImageURL] = useState('');
+  const [imageURLHeader, setImageURLHeader] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [onImgHover, setOnImgHover] = useState(false);
+  const [onPreview, setOnPreview] = useState(false);
+
+  useEffect(() => {
+    if (imageURL) {
+      onUploaded(imageURL);
+
+      fetch(imageURL, {
+        headers: { 'ngrok-skip-browser-warning': 'true' },
+      })
+        .then(response => response.blob())
+        .then(blob => {
+          const url = URL.createObjectURL(blob);
+          setImageURLHeader(url);
+        })
+        .catch(error => console.error('Failed to load image:', error));
+    }
+  }, [imageURL]);
+
+  const props: UploadProps = {
+    //wait for API
+    name: 'file',
+    accept: '.png,.jpg,.jpeg',
+    multiple: false,
+    maxCount: 1,
+    action: 'http://127.0.0.1:8000/file/',
+    onPreview(info) {
+      console.log(info);
+      setOnPreview(true);
+    },
+    //generate: '.../captions'
+    headers: {
+      'ngrok-skip-browser-warning': 'true',
+    },
+    onChange(info) {
+      setLoading(true);
+      const { status } = info.file;
+      if (status !== 'uploading') {
+        console.log(info.file, info.fileList);
+      }
+      if (status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully.`);
+        setLoading(false);
+        setImageURL(info.file.response.image_url);
+        console.log(imageURL);
+      } else if (status === 'error') {
+        setLoading(false);
+        message.error(`${info.file.name} file upload failed.`);
+      }
+      if (status === 'removed') {
+        message.success(`${info.file.name} file is successfully removed.`);
+        setImageURL('');
+        setLoading(false);
+      }
+    },
+    onDrop(e) {
+      console.log('Dropped files', e.dataTransfer.files);
+    },
+    onRemove() {
+      onRemove('');
+      setImageURL('');
+      setImageURLHeader('');
+    },
+  };
+
   return (
     <ConfigProvider
       theme={{
@@ -38,17 +91,37 @@ const UploadBox: React.FC = () => {
         },
       }}
     >
-      <Dragger {...props}>
-        <p className="ant-upload-drag-icon">
-          <InboxOutlined className="!text-white" />
-        </p>
-        <p className="ant-upload-text font-medium">
-          Click or drag file to this area to upload
-        </p>
-        <p className="ant-upload-hint">
-          Support for a single or bulk upload. Strictly prohibited from
-          uploading company data or other banned files.
-        </p>
+      <Dragger {...props} disabled={onImgHover || onPreview}>
+        <Spin spinning={loading} size="large">
+          {!imageURL ? (
+            <>
+              <p className="ant-upload-drag-icon">
+                <InboxOutlined className="!text-white" />
+              </p>
+              <p className="ant-upload-text font-medium">
+                Click or drag file to this area to upload
+              </p>
+              <p className="ant-upload-hint">
+                Support for a single upload. Be cautious and refrain from
+                uploading company data or other banned files.
+              </p>
+            </>
+          ) : (
+            <Space>
+              <Image
+                width={200}
+                src={imageURLHeader}
+                onMouseEnter={() => setOnImgHover(true)}
+                onMouseLeave={() => setOnImgHover(false)}
+                preview={{
+                  visible: onPreview,
+                  onVisibleChange: visible => setOnPreview(visible),
+                  afterOpenChange: visible => !visible && setOnPreview(false),
+                }}
+              />
+            </Space>
+          )}
+        </Spin>
       </Dragger>
     </ConfigProvider>
   );

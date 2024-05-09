@@ -3,7 +3,6 @@
 import PromptInput from '@/components/PromptInput';
 import UploadBox from '@/components/UploadBox';
 import { Button, Form, FormProps, Skeleton, Spin, notification } from 'antd';
-import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import Typewriter from 'typewriter-effect';
 import GraphemeSplitter from 'grapheme-splitter';
@@ -26,9 +25,11 @@ export default function Home() {
   const checkString = (str: string) => {
     if (str.startsWith('"') || str.endsWith('"')) {
       str = str.slice(1, -1);
-      return str;
+      const splitter = new GraphemeSplitter();
+      return splitter.splitGraphemes(str);
     } else {
-      return str;
+      const splitter = new GraphemeSplitter();
+      return splitter.splitGraphemes(str);
     }
   };
 
@@ -130,10 +131,6 @@ export default function Home() {
                     strings: checkString(caption),
                     autoStart: true,
                     delay: 10,
-                    stringSplitter(string) {
-                      const splitter = new GraphemeSplitter();
-                      return splitter.splitGraphemes(string).join('');
-                    },
                   }}
                 />
               </Button>
@@ -144,7 +141,10 @@ export default function Home() {
         return (
           <div>
             <p className="text-white mb-1">Generated Caption:</p>
-            <PromptInput value={checkString(selectedCaption)} size="large" />
+            <PromptInput
+              value={checkString(selectedCaption).join('')}
+              size="large"
+            />
           </div>
         );
       default:

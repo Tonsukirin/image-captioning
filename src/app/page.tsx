@@ -132,7 +132,7 @@ export default function Home() {
                     delay: 10,
                     stringSplitter(string) {
                       const splitter = new GraphemeSplitter();
-                      return splitter.splitGraphemes(string);
+                      return splitter.splitGraphemes(string).join('');
                     },
                   }}
                 />

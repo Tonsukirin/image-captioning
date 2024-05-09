@@ -3,6 +3,7 @@
 import PromptInput from '@/components/PromptInput';
 import UploadBox from '@/components/UploadBox';
 import { Button, Form, FormProps, Skeleton, Spin, notification } from 'antd';
+import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import Typewriter from 'typewriter-effect';
 

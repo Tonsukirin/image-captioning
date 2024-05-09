@@ -1,6 +1,7 @@
-import { Button, Input, Select, Space } from 'antd';
+import { CopyOutlined } from '@ant-design/icons';
+import { Button, Input, Space, message } from 'antd';
 import { SizeType } from 'antd/es/config-provider/SizeContext';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { useState } from 'react';
 
 type InputPromptProps = {
   placeholder?: string;
@@ -20,17 +21,19 @@ const PromptInput: React.FC<InputPromptProps> = ({
   disabled = false,
 }: InputPromptProps) => {
   const [valueSubmitted, setValueSubmitted] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
 
   const submit = () => {
-    console.log('submit users input');
-    setValueSubmitted(true);
-    setTimeout(() => {
-      setValueSubmitted(false);
-      console.log('finish loading input to system');
-    }, 3000);
+    console.log(value);
+    navigator.clipboard.writeText(value as string);
+    messageApi.open({
+      type: 'success',
+      content: 'Copied to clipboard!',
+    });
   };
   return (
     <Space.Compact style={{ width: '100%' }}>
+      {contextHolder}
       <Input
         placeholder={placeholder}
         value={value}
@@ -40,8 +43,12 @@ const PromptInput: React.FC<InputPromptProps> = ({
         className="h-auto"
       />
       {HasButton ? (
-        <Button type="primary" onClick={submit} loading={valueSubmitted}>
-          Submit
+        <Button
+          size={size}
+          onClick={submit}
+          className="grid place-items-center group"
+        >
+          <CopyOutlined className="opacity-30" />
         </Button>
       ) : (
         <></>

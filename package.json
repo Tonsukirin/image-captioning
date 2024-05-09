@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.3.7",
     "antd": "^5.16.4",
     "grapheme-splitter": "^1.0.4",
     "next": "14.2.2",

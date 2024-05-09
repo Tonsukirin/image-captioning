@@ -2,8 +2,8 @@
 
 import PromptInput from '@/components/PromptInput';
 import UploadBox from '@/components/UploadBox';
-import { Button, Form, FormProps, notification } from 'antd';
-import { useState } from 'react';
+import { Button, Form, FormProps, Skeleton, Spin, notification } from 'antd';
+import { useEffect, useState } from 'react';
 import Typewriter from 'typewriter-effect';
 
 type FieldType = {
@@ -34,6 +34,13 @@ export default function Home() {
     setCaptionStatus('waiting');
     setImageURL('');
   };
+
+  useEffect(() => {
+    console.log('change');
+    if (imageURL) {
+      setCaptionStatus('waiting');
+    }
+  }, [imageURL]);
 
   const onFinish: FormProps<FieldType>['onFinish'] = async values => {
     setLoading(true);
@@ -70,6 +77,7 @@ export default function Home() {
               description: `Profanity detected in "${errorDetails.detail.fields.map(
                 (field: string) => field
               )}" field`,
+              duration: 3,
             });
           } else {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -84,12 +92,14 @@ export default function Home() {
       notification.success({
         message: 'Form Submitted',
         description: 'Your form has been successfully submitted.',
+        duration: 3,
       });
     } catch (error) {
       console.error('Error:', error);
       notification.error({
         message: 'Submission Failed',
         description: 'There was a problem submitting your form.',
+        duration: 3,
       });
     } finally {
       setLoading(false); // Reset loading state whether success or failure
@@ -137,77 +147,105 @@ export default function Home() {
   };
 
   return (
-    <main className="flex flex-col m-20 font-thin gap-y-2 max-w-screen-2xl mx-auto">
-      <UploadBox onUploaded={setImageURL} onRemove={() => formReset()} />
-      {imageURL ? (
-        <Form onFinish={onFinish}>
-          <div className="w-full mb-0 mt-2">{renderCaption()}</div>
-          {captionStatus === 'waiting' && (
-            <div>
-              <p className="text-white mb-1">Optional</p>
-              <div className="flex flex-grow justify-evenly gap-x-4 ">
-                <Form.Item<FieldType> className="w-full" name="theme">
-                  <PromptInput
-                    placeholder="Theme prompts here..."
-                    disabled={loading}
-                  />
-                </Form.Item>
-                <Form.Item<FieldType> className="w-full" name="additionalInfo">
-                  <PromptInput
-                    placeholder="Additional Information prompts here..."
-                    disabled={loading}
-                  />
-                </Form.Item>
-                <Form.Item<FieldType> className="w-full" name="tone">
-                  <PromptInput
-                    placeholder="Tone prompts here..."
-                    disabled={loading}
-                  />
-                </Form.Item>
+    <main>
+      {loading && (
+        <Spin
+          spinning={loading}
+          size="large"
+          tip={
+            <Typewriter
+              options={{
+                strings: 'Loading...',
+                autoStart: true,
+                delay: 5,
+                loop: true,
+                cursor: ' ✈',
+              }}
+            />
+          }
+          fullscreen
+          className="flex justify-center items-center h-full"
+        />
+      )}
+      <div className="flex flex-col m-20 font-thin gap-y-2 max-w-screen-2xl mx-auto">
+        <UploadBox
+          onUploaded={setImageURL}
+          onRemove={() => formReset()}
+          onLoading={setLoading}
+        />
+        {imageURL ? (
+          <Form onFinish={onFinish}>
+            <div className="w-full mb-0 mt-2">{renderCaption()}</div>
+            {captionStatus === 'waiting' && (
+              <div>
+                <p className="text-white mb-1">Optional</p>
+                <div className="flex flex-grow justify-evenly gap-x-4 ">
+                  <Form.Item<FieldType> className="w-full" name="theme">
+                    <PromptInput
+                      placeholder="Theme prompts here..."
+                      disabled={loading}
+                    />
+                  </Form.Item>
+                  <Form.Item<FieldType>
+                    className="w-full"
+                    name="additionalInfo"
+                  >
+                    <PromptInput
+                      placeholder="Additional Information prompts here..."
+                      disabled={loading}
+                    />
+                  </Form.Item>
+                  <Form.Item<FieldType> className="w-full" name="tone">
+                    <PromptInput
+                      placeholder="Tone prompts here..."
+                      disabled={loading}
+                    />
+                  </Form.Item>
+                </div>
               </div>
-            </div>
-          )}
-          {captionStatus === 'waiting' && (
-            <Form.Item wrapperCol={{ span: 16 }}>
+            )}
+            {captionStatus === 'waiting' && (
+              <Form.Item wrapperCol={{ span: 16 }}>
+                <Button
+                  className="bg-black"
+                  type="primary"
+                  htmlType="submit"
+                  disabled={loading}
+                >
+                  Submit
+                </Button>
+              </Form.Item>
+            )}
+          </Form>
+        ) : (
+          <></>
+        )}
+        <div>
+          {captionStatus === 'selected' && (
+            <div className="flex mt-1 gap-x-4">
               <Button
                 className="bg-black"
                 type="primary"
-                htmlType="submit"
                 loading={loading}
+                htmlType="button"
+                onClick={() => setCaptionStatus('waiting')}
               >
-                Submit
+                Regenerate Caption
               </Button>
-            </Form.Item>
+              <Button
+                className="bg-black"
+                type="primary"
+                loading={loading}
+                htmlType="button"
+                onClick={() => {
+                  window.location.reload();
+                }}
+              >
+                Start over
+              </Button>
+            </div>
           )}
-        </Form>
-      ) : (
-        <></>
-      )}
-      <div>
-        {captionStatus === 'selected' && (
-          <div className="flex mt-1 gap-x-4">
-            <Button
-              className="bg-black"
-              type="primary"
-              loading={loading}
-              htmlType="button"
-              onClick={() => setCaptionStatus('waiting')}
-            >
-              Regenerate Caption
-            </Button>
-            <Button
-              className="bg-black"
-              type="primary"
-              loading={loading}
-              htmlType="button"
-              onClick={() => {
-                window.location.reload();
-              }}
-            >
-              Start over
-            </Button>
-          </div>
-        )}
+        </div>
       </div>
     </main>
   );

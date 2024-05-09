@@ -10,9 +10,14 @@ const { Dragger } = Upload;
 type Props = {
   onUploaded: any;
   onRemove: any;
+  onLoading: any;
 };
 
-const UploadBox: React.FC<Props> = ({ onUploaded, onRemove }: Props) => {
+const UploadBox: React.FC<Props> = ({
+  onUploaded,
+  onRemove,
+  onLoading,
+}: Props) => {
   const [imageURL, setImageURL] = useState('');
   const [imageURLHeader, setImageURLHeader] = useState('');
   const [loading, setLoading] = useState(false);
@@ -50,24 +55,28 @@ const UploadBox: React.FC<Props> = ({ onUploaded, onRemove }: Props) => {
       'ngrok-skip-browser-warning': 'true',
     },
     onChange(info) {
-      setLoading(true);
+      // setLoading(true);
+      onLoading(true);
       const { status } = info.file;
       if (status !== 'uploading') {
         console.log(info.file, info.fileList);
       }
       if (status === 'done') {
         message.success(`${info.file.name} file uploaded successfully.`);
-        setLoading(false);
+        // setLoading(false);
+        onLoading(false);
         setImageURL(info.file.response.image_url);
         console.log(imageURL);
       } else if (status === 'error') {
-        setLoading(false);
+        // setLoading(false);
+        onLoading(false);
         message.error(`${info.file.name} file upload failed.`);
       }
       if (status === 'removed') {
         message.success(`${info.file.name} file is successfully removed.`);
         setImageURL('');
-        setLoading(false);
+        // setLoading(false);
+        onLoading(false);
       }
     },
     onDrop(e) {

@@ -60,7 +60,7 @@ export default function Home() {
 
     try {
       const response = await fetch(
-        'https://87cf-171-101-104-145.ngrok-free.app/captions/',
+        'https://1451-171-101-104-145.ngrok-free.app/captions/',
         {
           method: 'POST',
           headers: {
